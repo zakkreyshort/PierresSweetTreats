@@ -12,12 +12,12 @@ using System.Security.Claims;
 namespace Pierres.Controllers
 {
   [Authorize]
-  public class AuthorsController : Controller
+  public class TreatsController : Controller
   {
     private readonly PierresContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public AuthorsController(UserManager<ApplicationUser> userManager, PierresContext db)
+    public TreatsController(UserManager<ApplicationUser> userManager, PierresContext db)
     {
       _userManager = userManager;
       _db = db;
@@ -85,7 +85,5 @@ namespace Pierres.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
-
-
   }
 }

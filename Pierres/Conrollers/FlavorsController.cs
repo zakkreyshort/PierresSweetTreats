@@ -4,22 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Security.Claims;
 
-
-
-
 namespace Pierres.Controllers
 {
-  [Authorize] 
+  [Authorize]
   public class FlavorsController : Controller
   {
     private readonly PierresContext _db;
-    private readonly UserManager<ApplicationUser> _userManager; 
-
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public FlavorsController(UserManager<ApplicationUser> userManager, PierresContext db)
     {
@@ -31,13 +27,13 @@ namespace Pierres.Controllers
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
-      var userFlavors = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id);
-      return View(userFlavors);
+      var userFlavor = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id);
+      return View(userFlavor);
     }
 
     public ActionResult Create()
     {
-      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "TreatName");
       return View();
     }
 
@@ -67,8 +63,8 @@ namespace Pierres.Controllers
 
     public ActionResult Edit(int id)
     {
-      var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
-      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
+      var thisFlavor = _db.Flavors.FirstOrDefault(flavor => flavor.FlavorId == id);
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "TreatName");
       return View(thisFlavor);
     }
 
@@ -87,7 +83,7 @@ namespace Pierres.Controllers
     public ActionResult AddTreat(int id)
     {
       var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
-      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "TreatName");
       return View(thisFlavor);
     }
 
@@ -124,6 +120,12 @@ namespace Pierres.Controllers
       _db.TreatFlavor.Remove(joinEntry);
       _db.SaveChanges();
       return RedirectToAction("Index");
+    }
+
+    public ActionResult Search(string search)
+    {
+      List<Flavor> model = _db.Flavors.Where(flavor => flavor.FlavorName.Contains(search)).ToList();
+      return View(model);
     }
   }
 }
