@@ -20,7 +20,9 @@ _This website is for bakery manager to add products to their list of treats, the
 | If user visits '/treats/new', application shows new treat form | user visits '/treats/new' | application displays form for adding new treat |
 | If user visits submits new treat form, application adds new treat to database and redirects to '/treats' | user submits form | application adds new treat to database and redirects to page showing all treats in database |
 | If user visits '/treats/{id}', application displays details for that treat | user clicks on specific treat in treats list | application redirects to display details about that treat |
-
+| Website will ask for authorization when visiting '/flavors/add' | User selects view flavor | Website will redirect to authorization sequence |
+| If user visits '/register/', website will go to create account|User clicks create account  | Website will bring up registration form for admin |
+| If user enters info and is authorized, will redirect to '/flavors/add'| User entered in correct login info | Website redirects to add flavors |
 ## Setup/Installation Requirements
 
 ### Install .NET Core
@@ -43,12 +45,14 @@ _Enter the following commands in Terminal (macOS) or PowerShell (Windows):_
 * ``git clone`` followed by the URL to this repository
 * ``cd PierresSweetTreats``
 
-_Confirm that you have navigated to the ToDoList.Solution directory (e.g., by entering the command_ ``pwd`` _in Terminal)._
+_Confirm that you have navigated to the PierresSweetTreats directory (e.g., by entering the command_ ``pwd`` _in Terminal)._
 
 _Run this application by entering the following command in Terminal (macOS) or PowerShell (Windows):_
 * ``cd Pierres``
 * ``dotnet restore``
 * ``dotnet build``
+* ``dotnet ef migrations add Initial``
+* ``dotnet ef database update``
 * ``dotnet run`` or ``dotnet watch run``
 
 _To view/edit the source code of this application, open the contents of this directory in a text editor or IDE of your choice (e.g., to open all contents of the directory in Visual Studio Code on macOS, enter the command_ ``code .`` _in Terminal)._
