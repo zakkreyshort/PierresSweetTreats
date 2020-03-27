@@ -19,14 +19,13 @@ namespace Pierres.Controllers
     private readonly PierresContext _db;
     private readonly UserManager<ApplicationUser> _userManager; 
 
-    //updated constructor
+
     public FlavorsController(UserManager<ApplicationUser> userManager, PierresContext db)
     {
       _userManager = userManager;
       _db = db;
     }
 
-    //updated Index method
     public async Task<ActionResult> Index()
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -41,7 +40,6 @@ namespace Pierres.Controllers
       return View();
     }
 
-    //updated Create post method
     [HttpPost]
     public async Task<ActionResult> Create(Flavor flavor, int TreatId)
     {
@@ -85,7 +83,7 @@ namespace Pierres.Controllers
       return RedirectToAction("Index");
     }
 
-    public ActionResult AddCategory(int id)
+    public ActionResult AddTreat(int id)
     {
       var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
       ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
@@ -93,7 +91,7 @@ namespace Pierres.Controllers
     }
 
     [HttpPost]
-    public ActionResult AddCategory(Flavor flavor, int TreatId)
+    public ActionResult AddTreat(Flavor flavor, int TreatId)
     {
       if (TreatId != 0)
       {
@@ -119,7 +117,7 @@ namespace Pierres.Controllers
     }
 
     [HttpPost]
-    public ActionResult DeleteCategory(int joinId)
+    public ActionResult DeleteTreat(int joinId)
     {
       var joinEntry = _db.TreatFlavor.FirstOrDefault(entry => entry.TreatFlavorId == joinId);
       _db.TreatFlavor.Remove(joinEntry);
