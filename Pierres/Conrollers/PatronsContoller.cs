@@ -63,7 +63,7 @@ namespace Pierres.Controllers
     public ActionResult Edit(int id)
     {
       var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
-      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "BookName");
+      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "FlavorName");
       return View(thisPatron);
     }
 
@@ -82,7 +82,7 @@ namespace Pierres.Controllers
     public ActionResult AddFlavor(int id)
     {
       var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
-      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "BookName");
+      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "FlavorName");
       return View(thisPatron);
     }
 

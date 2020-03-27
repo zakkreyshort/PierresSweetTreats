@@ -13,7 +13,7 @@ namespace Pierres.Models
         public int FlavorId { get; set; }
         public int TreatFlavorId { get; set; }
         public int PatronId { get; set; }
-        public string Description { get; set; }
+      
         public string FlavorName { get; set; }
         public virtual ApplicationUser User { get; set; }
 
