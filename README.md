@@ -58,7 +58,7 @@ _Run this application by entering the following command in Terminal (macOS) or P
 _To view/edit the source code of this application, open the contents of this directory in a text editor or IDE of your choice (e.g., to open all contents of the directory in Visual Studio Code on macOS, enter the command_ ``code .`` _in Terminal)._
 
 ## Errors & Bugs
-* _Currently
+* _Currently N/A._
 
 ## Technologies Used
 * _Git_
