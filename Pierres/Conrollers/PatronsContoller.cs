@@ -38,15 +38,15 @@ namespace Pierres.Controllers
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(Patron patron, int FlavorId)
+    public async Task<ActionResult> Create(TreatFlavor treatFlavor, int FlavorId)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
-      patron.User = currentUser;
-      _db.Patrons.Add(patron);
+      treatFlavor.User = currentUser;
+      _db.TreatFlavor.Add(treatFlavor);
       if (FlavorId != 0)
       {
-        _db.Checkout.Add(new Checkout() { PatronId = patron.PatronId, FlavorId = FlavorId });
+        _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = FlavorId });
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -54,15 +54,15 @@ namespace Pierres.Controllers
   public ActionResult Details(int id)
     {
       var thisPatron = _db.Patrons
-          .Include(patron => patron.Flavors)
-          .ThenInclude(join => join.Flavor)
-          .FirstOrDefault(patron => patron.PatronId == id);
+          .Include(patron => patron.Treat)
+          .ThenInclude(join => join.Flavors)
+          .FirstOrDefault(patron => patron.TreatFlavorId == id);
       return View(thisPatron);
     }
 
     public ActionResult Edit(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
+      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.TreatFlavorId == id);
       ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "FlavorName");
       return View(thisPatron);
     }
@@ -72,7 +72,7 @@ namespace Pierres.Controllers
     {
       if (FlavorId != 0)
       {
-        _db.Checkout.Add(new Checkout() { FlavorId = FlavorId, PatronId = patron.PatronId });
+        _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = FlavorId });
       }
       _db.Entry(patron).State = EntityState.Modified;
       _db.SaveChanges();
@@ -81,7 +81,7 @@ namespace Pierres.Controllers
 
     public ActionResult AddFlavor(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
+      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.TreatFlavorId == id);
       ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "FlavorName");
       return View(thisPatron);
     }
@@ -91,7 +91,7 @@ namespace Pierres.Controllers
     {
       if (FlavorId != 0)
       {
-        _db.Checkout.Add(new Checkout() { FlavorId = FlavorId, PatronId = flavor.PatronId });
+        _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = FlavorId, PatronId = flavor.PatronId });
         
         var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == FlavorId);
         // thisFlavor.Quantity -=1;
@@ -104,14 +104,14 @@ namespace Pierres.Controllers
 
     public ActionResult Delete(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
+      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.TreatFlavorId == id);
       return View(thisPatron);
     }
 
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
+      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.TreatFlavorId == id);
       _db.Patrons.Remove(thisPatron);
       _db.SaveChanges();
       return RedirectToAction("Index");

@@ -11,18 +11,24 @@ using System.Security.Claims;
 
 namespace Pierres.Controllers
 {
-  public class TreatsController : Controller
+  [Authorize]
+  public class AuthorsController : Controller
   {
     private readonly PierresContext _db;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public TreatsController(PierresContext db)
+    public AuthorsController(UserManager<ApplicationUser> userManager, PierresContext db)
     {
+      _userManager = userManager;
       _db = db;
     }
 
-    public ActionResult Index()
+    public async Task<ActionResult> Index()
     {
-      List<Treat> model = _db.Treats.ToList();
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var userTreats = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id);
+      List<Treats> model = _db.Treats.ToList();
       return View(model);
     }
 
@@ -32,8 +38,11 @@ namespace Pierres.Controllers
     }
 
     [HttpPost]
-    public ActionResult Create(Treat treat)
+    public async Task<ActionResult> Create(Treat treat)
     {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      treat.User = currentUser;
       _db.Treats.Add(treat);
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -76,5 +85,7 @@ namespace Pierres.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
+
+
   }
 }
