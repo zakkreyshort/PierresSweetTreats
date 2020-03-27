@@ -38,15 +38,15 @@ namespace Pierres.Controllers
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(TreatFlavor treatFlavor, int FlavorId)
+    public async Task<ActionResult> Create(Patron patron, int FlavorId)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
-      treatFlavor.User = currentUser;
-      _db.TreatFlavor.Add(treatFlavor);
+      patron.User = currentUser;
+      _db.Patrons.Add(patron);
       if (FlavorId != 0)
       {
-        _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = FlavorId });
+        _db.Checkout.Add(new Checkout() { PatronId = patron.PatronId, FlavorId = FlavorId });
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -54,16 +54,16 @@ namespace Pierres.Controllers
   public ActionResult Details(int id)
     {
       var thisPatron = _db.Patrons
-          .Include(patron => patron.Treat)
-          .ThenInclude(join => join.Flavors)
-          .FirstOrDefault(patron => patron.TreatFlavorId == id);
+          .Include(patron => patron.Flavors)
+          .ThenInclude(join => join.Flavor)
+          .FirstOrDefault(patron => patron.PatronId == id);
       return View(thisPatron);
     }
 
     public ActionResult Edit(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.TreatFlavorId == id);
-      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "FlavorName");
+      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
+      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "BookName");
       return View(thisPatron);
     }
 
@@ -72,7 +72,7 @@ namespace Pierres.Controllers
     {
       if (FlavorId != 0)
       {
-        _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = FlavorId });
+        _db.Checkout.Add(new Checkout() { FlavorId = FlavorId, PatronId = patron.PatronId });
       }
       _db.Entry(patron).State = EntityState.Modified;
       _db.SaveChanges();
@@ -81,22 +81,21 @@ namespace Pierres.Controllers
 
     public ActionResult AddFlavor(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.TreatFlavorId == id);
-      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "FlavorName");
+      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
+      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "BookName");
       return View(thisPatron);
     }
 
     [HttpPost]
-    public ActionResult AddTitle(Flavor flavor, int FlavorId)
+    public ActionResult AddFlavor(Flavor flavor, int FlavorId)
     {
       if (FlavorId != 0)
       {
-        _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = FlavorId, PatronId = flavor.PatronId });
+        _db.Checkout.Add(new Checkout() { FlavorId = FlavorId, PatronId = flavor.PatronId });
         
         var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == FlavorId);
         // thisFlavor.Quantity -=1;
         _db.Entry(thisFlavor).State = EntityState.Modified;
-        // string query = "UPDATE Titles SET Quantity++";
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -104,14 +103,14 @@ namespace Pierres.Controllers
 
     public ActionResult Delete(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.TreatFlavorId == id);
+      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
       return View(thisPatron);
     }
 
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.TreatFlavorId == id);
+      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
       _db.Patrons.Remove(thisPatron);
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -121,8 +120,8 @@ namespace Pierres.Controllers
     public ActionResult DeleteFlavor(int joinId)
     {
       var joinEntry = _db.Checkout.FirstOrDefault(entry => entry.CheckoutId == joinId);
-      var titleId = joinEntry.TitleId;
-      var thisTitle = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == titleId);
+      var flavorId = joinEntry.FlavorId;
+      var thisTitle = _db.Flavors.FirstOrDefault(titles => titles.FlavorId == flavorId);
       // thisTitle.Quantity +=1;
       _db.Checkout.Remove(joinEntry);
       _db.Entry(thisTitle).State = EntityState.Modified;
