@@ -28,8 +28,7 @@ namespace Pierres.Controllers
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
       var userTreats = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id);
-      List<Treat> model = _db.Treats.ToList();
-      return View(model);
+      return View(userTreats);
     }
 
     public ActionResult Create()
