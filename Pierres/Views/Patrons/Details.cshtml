@@ -1,0 +1,42 @@
+@{
+  Layout = "_Layout";
+}
+
+@model Pierres.Models.Patron
+<div class="container">
+  <div class="form-header">
+    <h2>Patron Order Details</h2>
+  </div>
+  <hr />
+  <div class="form-body">
+    <h3>@Html.DisplayNameFor(model => model.PatronName): @Html.DisplayFor(model => model.PatronName)</h3>
+
+    @if(@Model.Flavors.Count == 0)
+    {
+      <p>This patron does not have any books checked out currently.</p>
+    }
+    else
+    {
+      <h4>Flavors this patron belongs to:</h4>
+      <ul>
+      @foreach(var join in Model.Flavors)
+      {
+        <li>@join.Flavor.FlavorName</li>
+        @using (Html.BeginForm("DeleteFlavor", "Patrons"))
+        {
+          @Html.Hidden("joinId", @join.CheckoutId)
+          <input type="submit" value="Check In" class="btn btn-dark"/>
+        }
+      }
+      </ul>
+    }
+    <div class="row">
+      <div class="col-sm-12">
+        <p class="btn btn-dark">@Html.ActionLink("Back to list", "Index")</p>
+        <p class="btn btn-dark">@Html.ActionLink("Edit Name", "Edit", new { id = Model.PatronId })</p>
+        <p class="btn btn-dark">@Html.ActionLink("Delete Patron", "Delete", new { id = Model.PatronId })</p>
+        <p class="btn btn-dark">@Html.ActionLink("Make Order", "AddFlavor", "Patrons", new { id = Model.PatronId })</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+@{
+  Layout = "_Layout";
+}
+
+@model Pierres.Models.Patron
+
+<h4>Add a new order for @Html.LabelFor(model => model.PatronName)</h4>
+<hr />
+
+<div class ="col-md-8 offset-md-2">
+  @using (Html.BeginForm())
+  {
+      @Html.LabelFor(model => model.PatronName)
+      @Html.TextBoxFor(model => model.PatronName, new { @class = "form-control" , required = "required"})
+  }
+  <br>
+</div>
+
+
+<input type="submit" value="Add new order" class="btn btn-dark" />
+<br>
+<p class="btn btn-dark">@Html.ActionLink("Show all patrons", "Index")</p>

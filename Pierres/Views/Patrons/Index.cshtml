@@ -1,0 +1,28 @@
+@{
+  Layout = "_Layout";
+}
+
+@using Pierres.Models;
+@using System.Security.Claims
+@model IEnumerable<Pierres.Models.Patron>
+
+<h1>Patrons at our bakery: @User.Identity.Name</h1>
+<hr />
+
+@if (Model.Any())
+{
+  <ul>
+    @foreach (Patron patron in Model)
+    {
+      <li>@Html.ActionLink($"{patron.PatronName}", "Details", new { id = patron.PatronId })</li>
+    }
+  </ul>
+} 
+else
+{
+  <h3>No treats have been added your order yet!</h3>
+}
+
+<p class="btn btn-dark">@Html.ActionLink("Add new order", "Create")</p>
+
+<p class="btn btn-dark">@Html.ActionLink("Home", "Index", "Home")</p>
