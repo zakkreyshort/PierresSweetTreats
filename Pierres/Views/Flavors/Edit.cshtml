@@ -6,19 +6,23 @@
 
 <h2>Edit</h2>
 
-<h4>Edit this treat: @Html.DisplayFor(model => model.Description)</h4>
+<h4>Edit this flavor: @Html.DisplayFor(model => model.FlavorName)</h4>
 
 @using (Html.BeginForm())
 {
     @Html.HiddenFor(model => model.FlavorId)
 
-    @Html.LabelFor(model => model.Description)
-    @Html.EditorFor(model => model.Description)
+    @Html.LabelFor(model => model.FlavorName)
+    @Html.EditorFor(model => model.FlavorName)
+    <br>
 
-    @Html.Label("Select treat")
-    @Html.DropDownList("TreatId")
+    @Html.Label("Select order")
+    @Html.DropDownList("PatronId")
+
 
     <input type="submit" value="Save" />
 }
+
+
 
 <p>@Html.ActionLink("Back to list", "Index")</p>
