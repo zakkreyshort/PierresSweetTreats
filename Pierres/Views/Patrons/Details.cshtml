@@ -13,11 +13,11 @@
 
     @if(@Model.Flavors.Count == 0)
     {
-      <p>This patron does not have any books checked out currently.</p>
+      <p>This patron does not have any orders currently.</p>
     }
     else
     {
-      <h4>Flavors this patron belongs to:</h4>
+      <h4>Current Order: </h4>
       <ul>
       @foreach(var join in Model.Flavors)
       {

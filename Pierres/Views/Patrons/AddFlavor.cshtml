@@ -4,16 +4,16 @@
 
 @model Pierres.Models.Patron
 
-<h2>Add a treat</h2>
+<h2>Add a flavor</h2>
 
-<h4>Add a treat to this patron for checkout: @Html.DisplayFor(model => model.PatronName)</h4>
+<h4>Add a flavor to this patron for checkout: @Html.DisplayFor(model => model.PatronName)</h4>
 
 @using (Html.BeginForm())
 {
     @Html.HiddenFor(model => model.PatronId)
 
-    @Html.Label("Select treat")
-    @Html.DropDownList("TreatId")
+    @Html.Label("Select flavor")
+    @Html.DropDownList("FlavorId")
 
     <input type="submit" value="Buy Treat!" class="btn btn-dark"/>
 }
